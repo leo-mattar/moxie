@@ -108,12 +108,63 @@ function headerMobile() {
 }
 
 // HOME - LOADER
-function homeHeroLoader() {
-  const hasVisitedHomePage = localStorage.getItem("visitedHomePage");
+// function homeHeroLoader() {
+//   const hasVisitedHomePage = localStorage.getItem("visitedHomePage");
 
+//   let tl = gsap.timeline({
+//     defaults: { ease: moxieEase, duration: 1.6 },
+//     delay: hasVisitedHomePage ? 0.3 : 0.8,
+//   });
+
+//   gsap.set(".c-section.hm-hero > *", { visibility: "visible" });
+
+//   tl.from(".c-moxie-hero-txt", {
+//     xPercent: -200,
+//     autoAlpha: 0,
+//     stagger: 0.2,
+//     duration: 2,
+//   });
+
+//   // tl.to(".c-moxie-hero-txt", { fill: "#262423", stagger: 0.2 }, "<0.6");
+//   tl.from(
+//     ".c-moxie-hero-dot",
+//     { y: -200, scale: 0, transformOrigin: "center center" },
+//     "<1"
+//   );
+//   tl.to(".c-moxie-hero-dot", { rotation: 180 }, "<");
+//   tl.from(".c-slogan_lt", { autoAlpha: 0, y: 60 }, "<0.4");
+//   tl.from("[p-hero]", { autoAlpha: 0, y: 60 }, "<0.2");
+//   tl.from(".c-slogan_rt", { autoAlpha: 0, y: 60 }, "<0.2");
+//   tl.from(".o-row.hm-hero_bt .t-micro-1", { autoAlpha: 0, y: 60 }, "<0.2");
+//   tl.from(".c-hm-hero-social", { autoAlpha: 0, y: 60 }, "<0.2");
+//   tl.to(".c-header", { y: "0%" }, "<-0.2");
+//   tl.from(
+//     ".c-hero-art_line path",
+//     {
+//       drawSVG: 0,
+//       duration: 2.4,
+//       ease: CustomEase.create("", "0.66, 0, 0.34, 1"),
+//     },
+//     "0"
+//   );
+
+//   sloganSlider();
+
+//   if (hasVisitedHomePage) {
+//     loadComplete();
+//   } else {
+//     setTimeout(() => {
+//       loadComplete();
+//     }, 1800);
+//   }
+
+//   // Set the flag in localStorage to indicate that the user has visited the homepage
+//   localStorage.setItem("visitedHomePage", true);
+// }
+function homeHeroLoader() {
   let tl = gsap.timeline({
     defaults: { ease: moxieEase, duration: 1.6 },
-    delay: hasVisitedHomePage ? 0.3 : 0.8,
+    delay: 0.8,
   });
 
   gsap.set(".c-section.hm-hero > *", { visibility: "visible" });
@@ -150,16 +201,9 @@ function homeHeroLoader() {
 
   sloganSlider();
 
-  if (hasVisitedHomePage) {
+  setTimeout(() => {
     loadComplete();
-  } else {
-    setTimeout(() => {
-      loadComplete();
-    }, 1800);
-  }
-
-  // Set the flag in localStorage to indicate that the user has visited the homepage
-  localStorage.setItem("visitedHomePage", true);
+  }, 1800);
 }
 
 //
@@ -818,6 +862,7 @@ mm.add("(min-width: 992px)", () => {
     setTrackHeights();
     valuesSection();
     mainCTA();
+    homeHeroLoader();
   }
   return () => {
     gsap.set(".c-team-panel", { clearProps: "all" });
@@ -826,6 +871,12 @@ mm.add("(min-width: 992px)", () => {
 
 // --- MATCHMEDIA - TABLET AND MOBILE
 mm.add("(max-width: 991px)", () => {
+  if (homePage) {
+    $(".c-body").removeClass("no-scroll");
+    gsap.set(".c-section.hm-hero > *", { autoAlpha: 1 });
+    gsap.set(".c-header", { y: "0%" });
+    sloganSlider();
+  }
   headerMobile();
   $("[siteby-txt]").text("by");
   $(".c-btn.contact-nav").appendTo(".c-header-nav");
