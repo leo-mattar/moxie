@@ -10,6 +10,9 @@ $(window).on("beforeunload", function () {
   history.scrollRestoration = "manual";
 });
 
+// --- MATCHMEDIA
+let mm = gsap.matchMedia();
+
 // --- GLOBAL - CUSTOM EASE
 let moxieEase = CustomEase.create("moxieEase", "0.19, 1, 0.22, 1");
 let buttonEase = CustomEase.create("buttonEase", "0.785, 0.135, 0.15, 0.86");
@@ -542,77 +545,79 @@ test();
 function servicesPanel() {
   let panelEls = $(".services-panel");
 
-  panelEls.each(function (index, panelEl) {
-    let panelTimeline = gsap.timeline({
-      repeat: -1,
-      paused: true,
-      yoyo: true,
-    });
-
-    if (index === 0) {
-      panelTimeline.to(panelEls.find(".c-img.panel.is-1"), {
-        rotation: 10,
-        duration: 5,
-        ease: "bounce.inOut",
-      });
-      panelTimeline.to(panelEls.find(".c-img.panel.is-1"), {
-        rotation: -10,
-        duration: 5,
-        ease: "bounce.inOut",
-      });
-      panelTimeline.to(panelEls.find(".c-img.panel.is-1"), {
-        rotation: 0,
-        duration: 5,
-        ease: "bounce.inOut",
-      });
-    } else if (index === 1) {
-      panelTimeline.to(panelEls.find(".c-img.panel.is-3"), {
-        x: -15,
-        y: 15,
-        rotation: -10,
-        duration: 5,
-        ease: "bounce.inOut",
-      });
-      panelTimeline.to(panelEls.find(".c-img.panel.is-3"), {
-        x: 15,
-        y: -15,
-        rotation: 10,
-        duration: 5,
-        ease: "bounce.inOut",
-      });
-    } else if (index === 2) {
-      panelTimeline.to(panelEls.find(".c-img.panel.is-5"), {
-        x: 35,
-        duration: 5,
-        ease: "power3.inOut",
-        rotation: -3,
+  mm.add("(min-width: 992px)", () => {
+    panelEls.each(function (index, panelEl) {
+      let panelTimeline = gsap.timeline({
+        repeat: -1,
+        paused: true,
+        yoyo: true,
       });
 
-      panelTimeline.to(
-        panelEls.find(".c-img.panel.is-6"),
-        {
-          x: -35,
+      if (index === 0) {
+        panelTimeline.to(panelEls.find(".c-img.panel.is-1"), {
+          rotation: 10,
+          duration: 5,
+          ease: "bounce.inOut",
+        });
+        panelTimeline.to(panelEls.find(".c-img.panel.is-1"), {
+          rotation: -10,
+          duration: 5,
+          ease: "bounce.inOut",
+        });
+        panelTimeline.to(panelEls.find(".c-img.panel.is-1"), {
+          rotation: 0,
+          duration: 5,
+          ease: "bounce.inOut",
+        });
+      } else if (index === 1) {
+        panelTimeline.to(panelEls.find(".c-img.panel.is-3"), {
+          x: -15,
+          y: 15,
+          rotation: -10,
+          duration: 5,
+          ease: "bounce.inOut",
+        });
+        panelTimeline.to(panelEls.find(".c-img.panel.is-3"), {
+          x: 15,
+          y: -15,
+          rotation: 10,
+          duration: 5,
+          ease: "bounce.inOut",
+        });
+      } else if (index === 2) {
+        panelTimeline.to(panelEls.find(".c-img.panel.is-5"), {
+          x: 35,
           duration: 5,
           ease: "power3.inOut",
-          rotation: 3,
+          rotation: -3,
+        });
+
+        panelTimeline.to(
+          panelEls.find(".c-img.panel.is-6"),
+          {
+            x: -35,
+            duration: 5,
+            ease: "power3.inOut",
+            rotation: 3,
+          },
+          "<"
+        );
+      }
+
+      ScrollTrigger.create({
+        trigger: panelEl,
+        start: "top top",
+        end: "bottom top",
+        onToggle: function (self) {
+          $(panelEl).toggleClass("is-active", self.isActive);
+
+          if (self.isActive) {
+            panelTimeline.play();
+          } else {
+            panelTimeline.reverse();
+          }
         },
-        "<"
-      );
-    }
-
-    ScrollTrigger.create({
-      trigger: panelEl,
-      start: "top top",
-      end: "bottom top",
-      onToggle: function (self) {
-        $(panelEl).toggleClass("is-active", self.isActive);
-
-        if (self.isActive) {
-          panelTimeline.play();
-        } else {
-          panelTimeline.reverse();
-        }
-      },
+      });
     });
   });
 
@@ -835,9 +840,6 @@ function mainCTA() {
 // --- PAGES
 let homePage = document.querySelector("[home-page]");
 
-// --- MATCHMEDIA
-let mm = gsap.matchMedia();
-
 // --- INIT
 window.addEventListener("DOMContentLoaded", (event) => {
   if (homePage) {
@@ -845,8 +847,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     teamPanel();
     servicesPanel();
     processPanel();
-    redDotClickEffect();
-    heroPositionChange();
+    // heroPositionChange();
     updateDisplay();
   }
 });
@@ -863,6 +864,8 @@ mm.add("(min-width: 992px)", () => {
     valuesSection();
     mainCTA();
     homeHeroLoader();
+    redDotClickEffect();
+    heroPositionChange();
   }
   return () => {
     gsap.set(".c-team-panel", { clearProps: "all" });
@@ -887,3 +890,27 @@ mm.add("(max-width: 991px)", () => {
     $(".c-nav-btn").unbind();
   };
 });
+
+//
+////
+//
+
+// --- REMOVE SPLINE ON MOBILE
+window.onload = function () {
+  // Check if the device is a mobile device
+  if (isMobileDevice()) {
+    // Remove the element with class 'c-hero-art_spline'
+    var element = document.querySelector(".c-hero-art_spline");
+    if (element) {
+      element.parentNode.removeChild(element);
+    }
+  }
+};
+
+function isMobileDevice() {
+  // Regular expression to match common mobile device screen sizes
+  var mobileRegex =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+  // Check if the user agent matches the regular expression
+  return mobileRegex.test(navigator.userAgent);
+}
