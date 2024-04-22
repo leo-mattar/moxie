@@ -819,7 +819,7 @@ mm.add("(min-width: 992px)", () => {
 
 // --- MATCHMEDIA - TABLET AND MOBILE
 mm.add("(max-width: 991px)", () => {
-  lenis.destroy();
+  // lenis.destroy();
   if (homePage) {
     $(".c-body").removeClass("no-scroll");
     // gsap.set(".c-section.hm-hero > *", { autoAlpha: 1 });
